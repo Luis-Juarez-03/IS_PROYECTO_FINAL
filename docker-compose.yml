@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Root.1234
+      MYSQL_USER: userdb
+      MYSQL_PASSWORD: User.1234
+      MYSQL_DATABASE: isdbc
+    ports:
+      - "3307:3306"  # Host 3307 → Container 3306
+
+  compu-api:
+    build: ./computerapi
+    container_name: compu-api
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/isdbc
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Root.1234
+    ports:
+      - "8081:8080"
